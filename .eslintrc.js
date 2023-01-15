@@ -29,5 +29,9 @@ module.exports = {
   },
   extends: 'eslint:recommended',
 
-  rules: {},
+  rules: {
+    "no-unused-vars": [
+      "warn",
+    ]
+  },
 }
