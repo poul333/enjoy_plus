@@ -12,5 +12,5 @@ Page({
     if (code !== 10000) return wx.utils.toast()
 
     this.setData({ notifyList })
-  }
+  },
 })
