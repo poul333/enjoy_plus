@@ -1,9 +1,17 @@
 
 let secert_code = ''
 
+const app = getApp()
+
 Page({
   data: {
     countDownVisible: false,
+    mobile: "",
+    code: ''
+  },
+
+  onLoad({ redirectURL }) {
+    this.setData({ redirectURL })
   },
 
   countDownChange(ev) {
@@ -25,6 +33,18 @@ Page({
     return valid
   },
 
+  // 验证验证码
+  verifyCode() {
+    // 验证码为6位数字
+    const reg = /^\d{6}$/
+    // 验证验证码
+    const valid = reg.test(this.data.code.trim())
+    // 验证结果提示
+    if (!valid) wx.utils.toast('请检查验证码是否正确!')
+    // 返回验证结果
+    return valid
+  },
+
   copyCode() {
     wx.setClipboardData({ data: secert_code })
   },
@@ -37,5 +57,24 @@ Page({
     wx.utils.toast('短信发送成功')
     this.setData({ countDownVisible: true })
     secert_code = data.code
-  }
+  },
+
+  // 提交数据完成登录
+  async submitForm() {
+    // 逐个验证表单数据
+    if (!this.verifyMobile()) return
+    if (!this.verifyCode()) return
+
+    const { code, mobile } = this.data
+    const res = await wx.http.post('/login', { mobile, code })
+    if (res.code !== 10000) return wx.utils.toast('请检查验证码是否正确!')
+
+    // 存储token
+    app.setToken(res.data.token)
+
+    // 登录后跳转到用户想要去的页面
+    wx.redirectTo({
+      url: this.data.redirectURL
+    })
+  },
 })
