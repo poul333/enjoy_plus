@@ -29,6 +29,10 @@ Component({
         const lastPage = pageStack[pageStack.length - 1]
         const redirectUrl = lastPage.route
 
+        // 如果是未登录状态，将onLoad 和 onShow 的执行逻辑置成空函数
+        lastPage.onLoad = () => { }
+        lastPage.onShow = () => { }
+
         wx.redirectTo({
           url: `/pages/login/index?redirectURL=/${redirectUrl}`
         })

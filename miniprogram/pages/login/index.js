@@ -70,7 +70,7 @@ Page({
     if (res.code !== 10000) return wx.utils.toast('请检查验证码是否正确!')
 
     // 存储token
-    app.setToken(res.data.token)
+    app.setToken(res.data.token, res.data.refreshToken)
 
     // 登录后跳转到用户想要去的页面
     wx.redirectTo({

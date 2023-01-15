@@ -11,8 +11,39 @@ http.baseURL = 'https://live-api.itheima.net'
  */
 
 // 响应拦截器
-http.intercept.response = (res) => {
-  return res.data
+http.intercept.response = async ({ statusCode, data, config }) => {
+  // refresh_token 刷新token
+  if (statusCode === 401) {
+    // 判断是否refresh_token 失效 跳转到登录
+    if (config.url.includes('/refreshToken')) {
+      return wx.redirectTo({
+        url: "/pages/login/index"
+      })
+    }
+
+    const app = getApp()
+    const res = await http({
+      url: "/refreshToken",
+      method: 'POST',
+      header: {
+        Authorization: app.refresh_token
+      }
+    })
+
+    // 更新 token 和 refresh_token
+    app.setToken(res.data.token, res.data.refreshToken)
+    // 重新发起请求
+    return http(
+      Object.assign(config, {
+        // 传递新的token
+        header: {
+          Authorization: app.token
+        }
+      })
+    )
+  }
+
+  return data
 }
 
 // 请求拦截器

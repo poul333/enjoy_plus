@@ -3,6 +3,10 @@ Page({
     dialogVisible: false,
   },
 
+  onLoad() {
+    wx.http.get('/room')
+  },
+
   swipeClose(ev) {
     const { position, instance } = ev.detail
 
