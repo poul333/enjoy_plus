@@ -20,6 +20,13 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "选择社区",
+          "pathName": "house_pkg/pages/locate/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
