@@ -16,12 +16,23 @@ http.intercept.response = async ({ statusCode, data, config }) => {
   if (statusCode === 401) {
     // 判断是否refresh_token 失效 跳转到登录
     if (config.url.includes('/refreshToken')) {
+
+      const pageStack = getCurrentPages()
+      // 取出当前页面路径，登录成功能跳转到该页面
+      const lastPage = pageStack[pageStack.length - 1]
+      // 取出当前页面路径，登录成功能跳转到该页面
+      const redirectURL = lastPage.route
+
       return wx.redirectTo({
-        url: "/pages/login/index"
+        url: `/pages/login/index?redirectURL=/${redirectURL}`
       })
     }
 
     const app = getApp()
+
+    // 如果本地没有refresh——token 就不必去刷新token
+    if (!app.refresh_token) return
+
     const res = await http({
       url: "/refreshToken",
       method: 'POST',

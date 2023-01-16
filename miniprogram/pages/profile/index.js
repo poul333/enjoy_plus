@@ -1,66 +1,44 @@
-// pages/profile/index.ts
 Page({
 
-  /**
-   * 页面的初始数据
-   */
-  data: {
-
+  getUserNickName(ev) {
+    // 更新用户昵称
+    this.updateNickName(ev.detail.value)
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad() {
+  async updateNickName(nickName) {
+    const { code } = await wx.http.put('/userInfo', { nickName })
+    if (code !== 10000) return wx.utils.toast()
 
+    this.setData({ 'userInfo.nickName': nickName })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  getUserAvatar(ev) {
+    // this.setData({ 'userInfo.avatar': ev.detail.avatarUrl })
+    // 更新用户头像
+    this.updateUserAvatar(ev.detail.avatarUrl)
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
+  updateUserAvatar(avatarUrl) {
+    // 调用接口上传图片
+    wx.uploadFile({
+      url: wx.http.baseURL + '/upload',
+      filePath: avatarUrl,
+      name: 'file',
+      header: {
+        Authorization: getApp().token,
+      },
+      formData: {
+        type: 'avatar',
+      },
+      success: (res) => {
+        // 转换 json 数据
+        const data = JSON.parse(res.data)
+        // 检测接口调用结果
+        if (data.code !== 10000) return wx.utils.toast('更新头像失败!')
 
+        // 保存并预览图片地址
+        this.setData({ 'userInfo.avatar': data.data.url })
+      },
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
 })
