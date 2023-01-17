@@ -3,8 +3,15 @@ Page({
     dialogVisible: false,
   },
 
-  onLoad() {
-    wx.http.get('/room')
+  onShow() {
+    this.getHouseList()
+  },
+
+  // 获取房屋列表
+  async getHouseList() {
+    const { code, data: houseList } = await wx.http.get('/room')
+    if (code !== 10000) return wx.utils.toast()
+    this.setData({ houseList })
   },
 
   swipeClose(ev) {
@@ -21,9 +28,9 @@ Page({
     }
   },
 
-  goDetail() {
+  goDetail(ev) {
     wx.navigateTo({
-      url: '/house_pkg/pages/detail/index',
+      url: `/house_pkg/pages/detail/index?id=${ev.mark.id}`
     })
   },
 
