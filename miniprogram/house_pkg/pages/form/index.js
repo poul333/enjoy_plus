@@ -7,8 +7,22 @@ Page({
     idcardBackUrl: '',
   },
 
-  onLoad({ point, building, room }) {
-    this.setData({ point, building, room })
+  onLoad({ point, building, room, id }) {
+    if (id) {
+      wx.setNavigationBarTitle({ title: '编辑房屋信息' })
+      this.getHouseDetail(id)
+    } else {
+      this.setData({ point, building, room })
+    }
+  },
+
+  // 获取房屋信息
+  async getHouseDetail(id) {
+    if (!id) return
+    const { code, data: houseDetail } = await wx.http.get(`/room/${id}`)
+    if (code !== 10000) return wx.utils.toast()
+    // 渲染数据
+    this.setData({ ...houseDetail })
   },
 
   // 验证业主姓名
@@ -68,12 +82,14 @@ Page({
     if (!this.verifyPicture()) return
 
     delete this.data.__webviewId__  // 删除多余对象属性
+    delete this.data.status
+
     const { code } = await wx.http.post('/room', this.data)
     if (code !== 10000) return wx.utils.toast()
 
     // 跳回房屋列表
     wx.navigateBack({
-      delta: 4
+      delta: this.data.id ? 2 : 4
     })
 
   },
