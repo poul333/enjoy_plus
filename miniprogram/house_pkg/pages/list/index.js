@@ -1,3 +1,6 @@
+let house_id = ''
+let house_index = 0
+
 Page({
   data: {
     dialogVisible: false,
@@ -14,14 +17,32 @@ Page({
     this.setData({ houseList })
   },
 
+  // 删除
+  async deleteHouse() {
+    const { code } = await wx.http.delete(`/room/${house_id}`)
+    if (code !== 10000) return wx.utils.toast('删除房屋失败')
+    // 更新列表
+    this.data.houseList.splice(house_index, 1)
+    this.setData({ houseList: this.data.houseList })
+  },
+
+  // dialog回调
+  dialogClose(ev) {
+    ev.detail === 'confirm' && this.deleteHouse()
+  },
+
   swipeClose(ev) {
     const { position, instance } = ev.detail
+    console.log(ev.mark);
 
     if (position === 'right') {
       // 显示 Dialog 对话框
       this.setData({
         dialogVisible: true,
       })
+
+      house_id = ev.mark.id
+      house_index = ev.mark.index
 
       // swiper-cell 滑块关闭
       instance.close()
