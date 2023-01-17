@@ -27,6 +27,20 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "选择楼栋",
+          "pathName": "house_pkg/pages/building/index",
+          "query": "point=305大院",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "添加房屋",
+          "pathName": "house_pkg/pages/form/index",
+          "query": "point=305%E5%A4%A7%E9%99%A2&building=2%E5%8F%B7%E6%A5%BC&room=802",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
