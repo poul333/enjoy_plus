@@ -7,6 +7,8 @@ Page({
     houseLayerVisible: false,
     repairLayerVisible: false,
     dateLayerVisible: false,
+    houseId: '',
+    repairItemId: '',
     houseList: [],
     repairItem: [],
     attachment: [],

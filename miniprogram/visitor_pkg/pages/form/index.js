@@ -4,6 +4,7 @@ Page({
   data: {
     dateLayerVisible: false,
     houseLayerVisible: false,
+    houseId: '',
     gender: 1,
     name: '',
     mobile: '',

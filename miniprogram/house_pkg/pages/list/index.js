@@ -14,7 +14,7 @@ Page({
   async getHouseList() {
     const { code, data: houseList } = await wx.http.get('/room')
     if (code !== 10000) return wx.utils.toast()
-    this.setData({ houseList })
+    this.setData({ houseList, isEmpty: houseList.length === 0 })
   },
 
   // 删除
